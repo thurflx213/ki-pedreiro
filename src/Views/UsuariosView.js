@@ -1,18 +1,15 @@
-import Usuarios from "../Controllers/Usuarios.js";
-
 class UsuariosView{
-       constructor(){
-            this.usuarios = new Usuarios();
+       constructor(Usuarios){
+            this.usuarios = Usuarios;
        }
-
        renderizar(){
-        const usuarios = this.usuarios.listar();
-        const container = document.createElement('div');
-        container.classList.add('usuarios-container');
-        usuarios.forEach(usuario => {
-            container.innerHTML += `<div>${usuario.nome} - ${usuario.email} </div><br/>`
+        const Usuarios = this.usuarios.listar();
+        let container = '<div class="container">';
+        Usuarios.forEach(usuario => {
+            container += `<div>${usuario.nome} - ${usuario.email} </div><br/>`
         });
-        return container.innerHTML;
+         container += "</div>";
+         return container;
        }
 }
 export default UsuariosView;

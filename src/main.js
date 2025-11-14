@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain, nativeTheme} from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 
@@ -19,6 +19,8 @@ const createWindow = () => {
     frame: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: false,
+      contextIsolation: true,
     },
   });
 
@@ -30,7 +32,7 @@ const createWindow = () => {
   }
 
   // Open the DevTools.
-   //mainWindow.webContents.openDevTools();
+   mainWindow.webContents.openDevTools();
 };
 
 // This method will be called when Electron has finished
@@ -47,6 +49,14 @@ app.whenReady().then(() => {
     }
   });
 });
+ipcMain.handle('dark-mode:toggle', () => {
+  if (nativeTheme.shouldUseDarkColors) {
+    nativeTheme.themeSource = 'light'
+  } else {
+    nativeTheme.themeSource = 'dark'
+  }
+  return nativeTheme.shouldUseDarkColors
+})
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
