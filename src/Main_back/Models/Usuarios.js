@@ -8,7 +8,7 @@ class Usuarios{
     adicionar(usuario) {
         this.usuarios.push(usuario);
     }
-    listar() {
+    async listar() {
         return this.usuarios;
     }
     remover(usuario) {

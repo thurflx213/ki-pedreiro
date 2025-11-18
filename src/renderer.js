@@ -1,23 +1,20 @@
 import './index.css';
-import ServicoController from './Controllers/ServicoController.js';
-import UsuarioController from './Controllers/UsuarioController.js';
-import Configuracao from './Services/Configuracao.js';
+import Rotas from "./Renderer_front/Services/Rotas.js";
+import Configuracao from './Renderer_front/Services/Configuracao.js';
 
 const config = new Configuracao();
  await config.modoEscuro();
  
-const rotas = {
-  '/servicos': ServicoController,
-  '/usuarios': UsuarioController,
-};
-function navegarPara(rota) {
-  const controller = new rotas[rota]();
-  document.querySelector('#app').innerHTML = controller.listar();
+const rota_mapeada = new Rotas();
+
+async function navegarPara(rota) {
+  const html = await rota_mapeada.getPage(rota);
+  document.querySelector('#app').innerHTML = html;
 }
-window.addEventListener('hashchange', () => {
+window.addEventListener('hashchange', async () => {
   const rota = window.location.hash.replace('#', '/');
-  navegarPara(rota);
+  await navegarPara(rota);
 });
 
-navegarPara('/servicos');
+navegarPara('/usuario_listar');
 
