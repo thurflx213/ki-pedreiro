@@ -16,5 +16,5 @@ window.addEventListener('hashchange', async () => {
   await navegarPara(rota);
 });
 
-navegarPara('/usuario_listar');
+navegarPara('/usuario_menu');
 

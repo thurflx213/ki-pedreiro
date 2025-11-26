@@ -1,21 +1,55 @@
+import db from '../Database/db.js';
+import crypto from 'node:crypto';
 class Usuarios{
     constructor() {
-        this.usuarios = [
-            {"nome": "Arthur", "email": "arthur@example.com"},
-            {"nome": "Maria", "email": "maria@example.com"}
-        ];
+        
     }
+
     adicionar(usuario) {
-        this.usuarios.push(usuario);
+        const uuid = crypto.randomUUID();
+        const stmt = db.prepare(`
+            INSERT INTO usuarios (uuid, nome, email, sync_status)
+            VALUES (?, ?, ?, ?)
+        `);
+        const info = stmt.run(
+            uuid, 
+            usuario.nome, 
+            usuario.email,
+            0
+        );
+        return info.lastInsertRowid;
     }
+
     async listar() {
-        return this.usuarios;
+        const stmt = db.prepare(`SELECT * FROM usuarios WHERE excluido_em IS NULL`);
+        return stmt.all();
     }
-    remover(usuario) {
-        const index = this.usuarios.indexOf(usuario);
-        if (index !== -1) {
-            this.usuarios.splice(index, 1);
-        }
+
+    async buscarPorId(uuid){
+          const stmt = db.prepare(`SELECT * FROM usuarios WHERE uuid = ? AND excluido_em IS NULL`);
+          return stmt.get(uuid);
+    }
+
+    async atualizar(usuarioAtualizado){
+        const stmt = db.prepare(`UPDATE usuarios 
+            SET nome = ?, 
+            email = ?, 
+            atualizado_em = CURRENT_TIMESTAMP, 
+            sync_status = 0 
+            WHERE uuid = ? 
+            `);
+        const info = stmt.run(
+            usuarioAtualizado.nome,
+            usuarioAtualizado.email,
+            usuarioAtualizado.uuid
+        );
+        return info.changes;
+    }
+
+        async remover(usuario) {
+        const stmt = db.prepare(`UPDATE usuarios SET excluido_em = CURRENT_TIMESTAMP, sync_status = 0 WHERE uuid = ?`);
+            const info = stmt.run(usuario.uuid);
+            return info.changes > 0 ? true : false;
     }
 }
 export default Usuarios;
