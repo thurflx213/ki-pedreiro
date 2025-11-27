@@ -10,7 +10,7 @@ class UsuariosView{
                 </div>`;    
        }
        renderizarLista(usuarios){
-        let container = `<div style="overflow-x:auto;">
+        let container = `<div style="overflow-x:auto;" id="container">
                             <table>
                              <tr>
                                 <th>Nome</th>

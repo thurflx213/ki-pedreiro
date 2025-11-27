@@ -5,7 +5,6 @@ class UsuarioListar{
     constructor(){
         this.view = new UsuariosView();
         this.mensagem = new MensagemDeAlerta();
-        this.app = document.getElementById('app');
     }
   async renderizarLista(){
     const dados = await window.api.listar();
@@ -16,7 +15,12 @@ class UsuarioListar{
      return this.view.renderizarLista(dados)
    }
    adicionarEventos(){
-       this.app.addEventListener("click", async (e)=>{
+    const btnfechar = document.getElementById("fechar");
+    btnfechar.addEventListener("click",()=>{
+      this.view.fecharModal();
+    })
+    const container = document.getElementById("container");
+       container.addEventListener("click", async (e)=>{
          const idUsuario = e.target.getAttribute("data-id");
            if(e.target.classList.contains("editar-user")){
                console.log("Editar usuario com ID:", idUsuario);
@@ -34,10 +38,11 @@ class UsuarioListar{
                if(resultado){
                    this.mensagem.sucesso("Usuário excluído com sucesso!");
                    setTimeout( async () => {
-                   this.app.innerHTML = await this.renderizarLista();
-                   },1500);
+                   document.getElementById("app").innerHTML = await this.renderizarLista();
+                   },1500)
+                   return true
                }else{
-                    this.mensagem.erro("Erro ao excluir usuário!");
+                    this.mensagem.erro("Erro ao excluir usuário!")
                }
            }
            if(e.target.classList.contains("close")){
