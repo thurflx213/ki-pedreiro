@@ -8,6 +8,17 @@ class UsuarioController{
                 console.log('dados no controller', dados);
                 return dados;
             }
+            async sincronizarAPILocal(usuarios){
+                console.log("array:", usuarios)
+                usuarios.forEach(usuario => {
+                if(this.usuarioModel.buscarPorEmail(usuario.email_usuario)){
+                    if(this.usuarioModel.adicionar(usuario)){
+                        console.log(`Usuário ${usuario.email_usuario} adicionado com sucesso.`);
+                    }
+                }
+                });
+            }
+            
             async cadastrar(usuario){
                 if(!usuario.nome || !usuario.email){
                     return false;

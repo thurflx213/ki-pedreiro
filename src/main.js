@@ -3,6 +3,7 @@ import path from 'node:path';
 import started from 'electron-squirrel-startup';
 import UsuarioController from './Main_back/Controllers/UsuarioController.js';
 import servicoController from './Main_back/controllers/servicoController.js';
+import APIFetch from './Main_back/Services/APIFetch.js'; 
 import { initDatabase } from './Main_back/Database/db.js';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -11,7 +12,8 @@ if (started) {
 }
 
 const controllerUsuario = new UsuarioController();
-const controllerServico = new servicoController();
+const apiremoto = new APIFetch();
+
 const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -82,6 +84,12 @@ ipcMain.handle("usuarios:editar", async (event, usuario) => {
   const resultado = await controllerUsuario.atualizarUsuario(usuario);
   return resultado;
 })
+
+async function buscarUsuariosRemoto(){
+  const resultado = await apiremoto.fetch("usuarios");
+  await controllerUsuario.sincronizarAPILocal(resultado.data.data)
+}
+ buscarUsuariosRemoto()
 
 });
 

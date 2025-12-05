@@ -14,11 +14,11 @@ class UsuariosView{
                             <table>
                              <tr>
                                 <th>Nome</th>
-                                <th>Email</th>
+                                <th>E-mail</th>
                                 <th>Ações</th>
                             </tr>`;
         usuarios.forEach(usuario => {
-            container += `<tr><td>${usuario.nome}</td><td>${usuario.email}</td>
+            container += `<tr><td>${usuario.nome_usuario}</td><td>${usuario.email_usuario}</td>
             <td> 
             <button class="editar-user" data-id="${usuario.uuid}">Editar</button> 
             <button class="excluir-user" data-id="${usuario.uuid}">Excluir</button>
